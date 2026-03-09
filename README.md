@@ -19,7 +19,7 @@ Rather than stopping at a notebook, we built a fully modular pipeline — separa
 
 | | |
 |---|---|
-| **Live Demo** | [Netflix Churn Strategist on Streamlit Cloud](#) |
+| **Live Demo** | [Netflix Churn Strategist on Streamlit Cloud](https://netflix-churn-ai.streamlit.app/) |
 | **Dataset** | Netflix customer subscription records across demographics, devices, and viewing behaviour |
 | **Records Used** | 5,000 labelled customer transactions |
 | **Top Model** | Decision Tree Classifier — Accuracy: **~97.9%**, Precision: **~98.5%** |
@@ -197,9 +197,12 @@ What actually drives Netflix churn predictions?
 
 ## Team
 
-| Member | Role |
-|---|---|
-| Samay Samrat | ML model architecture, Streamlit UI, deployment |
+| Enrollment No. | Member | Role |
+|---|---|---|
+| 2401010505 | Vipul Sharma | Model Development & Optimization |
+| 2401010254 | Lokendra Singh | Documentation & Data Structuring |
+| 2401020053 | Samay Samrat | Deployment & Version Control |
+| 2401010061 | Aman Kumar | Dataset Acquisition & Data Engineering |
 
 ---
 
