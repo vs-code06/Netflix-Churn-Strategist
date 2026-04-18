@@ -1,3 +1,4 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
 streamlit
 pandas
 numpy
@@ -15,4 +16,3 @@ torchvision
 streamlit-local-storage
 reportlab
 pypdf
---extra-index-url https://download.pytorch.org/whl/cpu
