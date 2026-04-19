@@ -17,3 +17,4 @@ torchvision
 streamlit-local-storage
 reportlab
 pypdf
+langgraph

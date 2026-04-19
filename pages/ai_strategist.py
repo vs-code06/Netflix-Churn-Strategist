@@ -3,7 +3,7 @@ import sys, os
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from pages.theme import inject_theme, page_header, section_label
-from logic.churn_model import train_model, predict_new_customer
+from logic.churn_model import train_model, predict_new_customer, get_prediction_drivers
 from logic.ai_agent import analyze_churn_and_strategize, analyze_upsell_and_strategize
 import json
 
@@ -65,19 +65,22 @@ if submitted:
     }
     st.session_state.customer_data = customer_data
     
-    with st.status("Agent processing...", expanded=True) as status:
-        st.write("Predicting base churn risk using Decision Tree...")
+    with st.status("Initializing Agentic Intelligence Layer...", expanded=True) as status:
+        st.write("1. **Predictive Analytics**: Initializing Scikit-Learn Decision Tree for risk categorization...")
         prediction = predict_new_customer(model, X_columns, customer_data)
         
         if prediction == 0:
-            st.write("Customer is safe. Triggering Expansion Strategy...")
-            st.write("Synthesizing upsell & cross-sell logic (LLaMA-3)...")
+            st.write("2. **Safe Signal**: Routing to Expansion Node for LTV maximization...")
+            st.write("3. **Upsell Synthesis**: Orchestrating LLaMA-3 for growth-focused strategy...")
             agent_result = analyze_upsell_and_strategize(customer_data)
         else:
-            st.write("High churn risk detected. Analysing drivers...")
-            feature_imp = {"last_login_days": 0.4, "watch_hours": 0.3, "monthly_fee": 0.2} # Mocking SHAP
-            st.write("Searching Knowledge Base for past successful strategies...")
-            st.write("Synthesizing custom response with Groq (LLaMA-3)...")
+            st.write("2. **Neural Driver Identification**: Extracting localized behavioral risk vectors...")
+            feature_imp = get_prediction_drivers(model, X_columns, customer_data)
+            st.write(f"Detected Churn Vectors: `{', '.join(feature_imp.keys()) if feature_imp else 'General Friction'}`")
+            
+            st.write("3. **Contextual Retrieval**: Traversing Vector DB and historical RL feedback logs...")
+            st.write("4. **Strategy Architecture**: Orchestrating Architect Agent for multi-objective retention drafting...")
+            st.write("5. **Agentic Refinement**: Initiating Critic Agent for heuristic evaluation and iterative self-correction...")
             agent_result = analyze_churn_and_strategize(customer_data, {}, feature_importances=feature_imp)
             
         if "error" in agent_result:

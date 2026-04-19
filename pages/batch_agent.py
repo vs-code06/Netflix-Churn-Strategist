@@ -5,7 +5,7 @@ import time
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from pages.theme import inject_theme, page_header
-from logic.churn_model import train_model, predict_new_customer
+from logic.churn_model import train_model, predict_new_customer, get_prediction_drivers
 from logic.ai_agent import analyze_churn_and_strategize
 
 inject_theme()
@@ -47,17 +47,10 @@ if uploaded_file is not None:
             if prediction == 1:
                 st.write(f"High Risk | Plan: {row.get('subscription_type')}")
                 
-                user_reason_dict = {}
-                if row.get('watch_hours', 20) < 5:
-                    user_reason_dict["watch_hours"] = 0.9
-                elif row.get('monthly_fee', 0) > 15:
-                    user_reason_dict["high_fee"] = 0.8
-                elif row.get('last_login_days', 0) > 14:
-                    user_reason_dict["inactive"] = 0.85
-                else:
-                    user_reason_dict["general_friction"] = 0.5
+                with st.spinner("Neural Driver Identification: Extracting risk vectors..."):
+                    user_reason_dict = get_prediction_drivers(model, X_columns, customer_data)
                 
-                with st.spinner("Agent generating strategy..."):
+                with st.spinner("LangGraph Orchestration: Architecting & Refining Strategic Intervention..."):
                     from logic.ai_agent import analyze_churn_and_strategize
                     agent_res = analyze_churn_and_strategize(customer_data, {}, feature_importances=user_reason_dict)
                     

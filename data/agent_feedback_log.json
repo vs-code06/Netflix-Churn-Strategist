@@ -28,5 +28,17 @@
         "feedback": "Strategy successfully retained or upgraded the user.",
         "plan": "Basic",
         "action": "FLEX15-ASIA"
+    },
+    {
+        "status": "Success",
+        "feedback": "Strategy successfully retained or upgraded the user.",
+        "plan": "Basic",
+        "action": "FLEX15-ASIA"
+    },
+    {
+        "status": "Failure",
+        "feedback": "The user rejected the offer or churned anyway.",
+        "plan": "Basic",
+        "action": "PREMIUM22-ASIA-UPG"
     }
 ]

@@ -51,3 +51,43 @@ def predict_new_customer(model, X_columns, customer_data):
     
     prediction = model.predict(df_new)
     return prediction[0]
+
+def get_prediction_drivers(model, X_columns, customer_data, top_n=3):
+    """
+    Calculates which features contributed most to the 'Churn' prediction 
+    for a specific user by tracing the Decision Path and measuring 
+    the probability deltas at each split.
+    """
+    df_sample = pd.DataFrame([customer_data])
+    df_sample = pd.get_dummies(df_sample)
+    df_sample = df_sample.reindex(columns=X_columns, fill_value=0)
+    
+    # 1. Trace the path taken by this specific sample
+    indicator = model.decision_path(df_sample)
+    node_index = indicator.indices[indicator.indptr[0]:indicator.indptr[1]]
+    
+    # 2. Get the probability of 'Churn' (class 1) at each node in the path
+    # model.tree_.value[node] = [[count_0, count_1]]
+    path_values = model.tree_.value[node_index]
+    node_sums = path_values.sum(axis=2).flatten()
+    churn_probs = path_values[:, 0, 1] / node_sums
+    
+    # 3. Calculate deltas (how much each choice increased the risk)
+    # delta[i] is the change caused by the feature at node_index[i]
+    deltas = churn_probs[1:] - churn_probs[:-1]
+    
+    # Features used at each parent node in the path
+    feature_indices = model.tree_.feature[node_index[:-1]]
+    feature_names = [X_columns[f] for f in feature_indices]
+    
+    # 4. Aggregate deltas per feature (in case a feature is used multiple times)
+    drivers = {}
+    for name, delta in zip(feature_names, deltas):
+        drivers[name] = drivers.get(name, 0.0) + delta
+    
+    # 5. Return top positive drivers (factors that increased churn risk)
+    sorted_drivers = sorted(drivers.items(), key=lambda x: x[1], reverse=True)
+    
+    # Return as dict, filtering only factors that had a positive contribution to churn
+    top_drivers = sorted_drivers[:top_n]
+    return {k: round(float(v), 3) for k, v in top_drivers if v > 0}
